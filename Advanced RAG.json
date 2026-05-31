@@ -1,0 +1,372 @@
+{
+  "name": "Advanced RAG",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "rag001",
+          "mode": "list",
+          "cachedResultName": "rag001"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -336,
+        -64
+      ],
+      "id": "8e73a898-b0ea-4ef3-bf68-40d8f29258b7",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "8Xk3w0VPZoOZ0bGj",
+          "name": "Pinecone account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "loader": "docxLoader",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -256,
+        128
+      ],
+      "id": "b1bc5dfe-f767-42c4-b1fd-14327ea9607c",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        128
+      ],
+      "id": "0160dd32-dc8e-4035-8b6d-3f92cd684029",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "WIYFEzltm9lUDOcj",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chunkSize": 500,
+        "chunkOverlap": 100,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        304
+      ],
+      "id": "f3d885c9-cc85-4a70-baf7-8c5e9720e50e",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "formTitle": "Advanced RAG Pipeline",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "upload PRD",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -544,
+        -64
+      ],
+      "id": "ac68b7d6-fa6e-4591-a813-491ef9f5f781",
+      "name": "On form submission",
+      "webhookId": "bf300a63-f5de-4c3e-9d8c-1824c7592408"
+    },
+    {
+      "parameters": {
+        "content": "Ingestion",
+        "height": 544,
+        "width": 752
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -624,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "8f2ab656-78b4-4430-9c66-75108163bd0d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        -864,
+        608
+      ],
+      "id": "54038f7f-52e6-440d-931a-c195bd2d2ab7",
+      "name": "Chat",
+      "webhookId": "15d17aef-e148-48a3-b564-98c7e05a9e36"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are an advanced RAG assistant. \nFollow these rules:\n1. Use ONLY the reranked context provided from Pinecone.\n2. Do not rely on outside knowledge.\n3. If the context is insufficient, reply exactly: \"I don’t have enough context to answer that.\"\n4. Keep answers concise and factual.\n5. Add inline citations like [source-1], [source-2] based on the context chunks."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -656,
+        608
+      ],
+      "id": "538520ce-8ed0-4ec9-9ae5-26f1f4dc2494",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "store the chunks of product requirement document in vectorization manner.",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "rag001",
+          "mode": "list",
+          "cachedResultName": "rag001"
+        },
+        "topK": 10,
+        "useReranker": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -512,
+        832
+      ],
+      "id": "4997141e-9e99-42d4-952e-95cc4c59d08f",
+      "name": "Pinecone Vector Store1",
+      "credentials": {
+        "pineconeApi": {
+          "id": "8Xk3w0VPZoOZ0bGj",
+          "name": "Pinecone account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -560,
+        1024
+      ],
+      "id": "07279391-8164-45ba-a754-9ac3fd17f4e1",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "WIYFEzltm9lUDOcj",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.rerankerCohere",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        1040
+      ],
+      "id": "2b359427-dcb0-46ea-950a-9b19f06bc55d",
+      "name": "Reranker Cohere",
+      "credentials": {
+        "cohereApi": {
+          "id": "LzdTH1xen0KoVE7e",
+          "name": "Cohere account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        832
+      ],
+      "id": "02357472-6f8e-4ad1-a4ba-44c5221cdb15",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "qONkyJp3QGA9TntQ",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Retrieval & Generation",
+        "height": 624,
+        "width": 736,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "0f1ffacd-9068-4f7a-86f5-fda5dd1b2aba",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "main": [
+        []
+      ]
+    },
+    "Chat": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reranker Cohere": {
+      "ai_reranker": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_reranker",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "86cb5ed3-6af8-452e-980d-cb7c53ee96d7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9e7db4471383d0df75361f1619777d5e1295f343567b8836fdf4afff0dd283d0"
+  },
+  "id": "E1kxHOcFVLJd7Hs2",
+  "tags": []
+}
